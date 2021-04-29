@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask-restplus = "==0.9.2"
+pymongo = "*"
+bcrypt = "*"
+jsonschema = "*"
+Flask = "*"
+Flask-PyMongo = "*"
+Werkzeug = "==0.16.1"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"

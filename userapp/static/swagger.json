@@ -1,0 +1,265 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Anirban",
+    "version": "1.0.0",
+    "title": "user_operation"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User Operation",
+      "description": "Sample user registration, login, list and delete operations"
+    }
+  ],
+  "paths": {
+    "/app/useroperations/v1/users": {
+      "get": {
+        "tags": [
+          "List users"
+        ],
+        "summary": "Returns List of users",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/users"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Register new user"
+        ],
+        "summary": "Registration for new user",
+        "requestBody": {
+          "description": "Registration for new user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "User profile created successfully!"
+          },
+          "400": {
+            "description": "1. Invalid json form. Please check input data; 2. Name should be 4 to 20 Characters and alpha-numeric value; 3. Please share proper email address; 4. Password should 8 to 25 character and it should contain at least one upper case one lower case one digit and and one special characters (@$#_); "
+          },
+          "500": {
+            "description": "Internal error occurred;"
+          }
+        }
+      }
+    },
+    "/app/useroperations/v1/users/user/": {
+      "post": {
+        "tags": [
+          "Login registered users"
+        ],
+        "summary": "Login registered users",
+        "requestBody": {
+          "description": "Login registered users",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userLoginBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "User logged in successfully at $time "
+          },
+          "400": {
+            "description": "1. Invalid json form. Please check input data; 2. Provided password in incorrect;  3. Please share proper email address; "
+          },
+          "500": {
+            "description": "Internal error occurred;"
+          }
+        }
+      }
+    },
+    "/app/useroperations/v1/users/{email}": {
+      "put": {
+        "tags": [
+          "Update details of registered users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "required": true,
+            "description": "Email id of registered user",
+            "schema": {
+              "$ref": "#/components/schemas/email"
+            }
+          }
+        ],
+        "summary": "Update details of registered users",
+        "requestBody": {
+          "description": "Update details of registered users",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userUpdateBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "User profile updated successfully!"
+          },
+          "404":{
+            "description": "No account exists with this email id"
+          },
+          "400": {
+            "description": "1. Name should be 4 to 20 Characters and alpha-numeric value; 2. Invalid json form. Please check input data; 3. Password should 8 to 25 character and it should contain at least one upper case one lower case one digit and and one special characters (@$#_);  "
+          },
+          "500": {
+            "description": "Internal error occurred;"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Delete account of registered users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "required": true,
+            "description": "Email id of registered user",
+            "schema": {
+              "$ref": "#/components/schemas/email"
+            }
+          }
+        ],
+        "summary": "Delete account of registered users",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "User profile deleted successfully!"
+          },
+          "404":{
+            "description": "No account exists with this email id"
+          },
+          "400": {
+            "description": "Please share proper email address; "
+          },
+          "500": {
+            "description": "Internal error occurred;"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "email": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "userLoginBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "userPostBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "userUpdateBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "lastLogIn": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "users": {
+        "type": "array",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "$ref": "#/components/schemas/user"
+            }
+          }
+        }
+      }
+    }
+  }
+}
