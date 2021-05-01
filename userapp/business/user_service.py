@@ -1,3 +1,8 @@
+"""
+    Written by ©Anirban Bhattacherji
+    2021
+"""
+
 from datetime import datetime
 
 import bcrypt

@@ -1,3 +1,8 @@
+"""
+    Written by ©Anirban Bhattacherji
+    2021
+"""
+
 from pymongo import MongoClient, errors
 from flask import current_app
 from userapp.util.exception import CustomErr

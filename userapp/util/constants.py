@@ -1,3 +1,8 @@
+"""
+    Written by ©Anirban Bhattacherji
+    2021
+"""
+
 NAME_VALIDATION_ERR = 'Name should be 4 to 20 Characters and alpha-numeric value; '
 EMAIL_VALIDATION_ERR = 'Please share proper email address; '
 EMAIL_EXISTS = 'An account already exists with this email id'

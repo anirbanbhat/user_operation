@@ -1,4 +1,9 @@
-from http.client import HTTPException
+"""
+    Written by ©Anirban Bhattacherji
+    2021
+"""
+
+from json import JSONDecodeError
 
 from flask import request, jsonify, Blueprint, current_app
 
@@ -14,6 +19,8 @@ def create_user():
     """Creates new user"""
     current_app.logger.debug("POST: Creates new user")
     try:
+        if not request.is_json:
+            raise CustomErr(constants.HTTP_PARSE_ERR, 400)
         data = request.get_json(force=True)
         updated_data = user_service.validate_registration(data)
         user_service.insert_data(updated_data)
@@ -22,6 +29,9 @@ def create_user():
     except CustomErr as e:
         current_app.logger.error(e)
         return jsonify(error=e.message), e.code
+    except (ValueError, JSONDecodeError) as e:
+        current_app.logger.error(e)
+        return jsonify(constants.HTTP_PARSE_ERR), 400
     except Exception as err:
         current_app.logger.error(err)
         return jsonify(error=constants.INTERNAL_ERR), 500
@@ -47,6 +57,8 @@ def login_user():
     """Returns user based on email/password"""
     current_app.logger.debug("POST: Login with email and password")
     try:
+        if not request.is_json:
+            raise CustomErr(constants.HTTP_PARSE_ERR, 400)
         data = request.get_json(force=True)
         user_service.validate_login(data)
         response = user_service.update_login(data)
@@ -54,9 +66,9 @@ def login_user():
     except CustomErr as e:
         current_app.logger.error(e)
         return jsonify(error=e.message), e.code
-    except HTTPException as eh:
-        current_app.logger.error(eh)
-        return jsonify(error=constants.HTTP_PARSE_ERR), 400
+    except (ValueError, JSONDecodeError) as e:
+        current_app.logger.error(e)
+        return jsonify(constants.HTTP_PARSE_ERR), 400
     except Exception as err:
         current_app.logger.error(err)
         return jsonify(error=constants.INTERNAL_ERR), 500
@@ -67,6 +79,8 @@ def update_user(email):
     """Updates user based on email"""
     current_app.logger.debug("PUT: Update name or password")
     try:
+        if not request.is_json:
+            raise CustomErr(constants.HTTP_PARSE_ERR, 400)
         data = request.get_json(force=True)
         update_query = user_service.validate_updation(data, email)
         user_service.update_data(email, update_query)
@@ -74,6 +88,9 @@ def update_user(email):
     except CustomErr as e:
         current_app.logger.error(e)
         return jsonify(error=e.message), e.code
+    except (ValueError, JSONDecodeError) as e:
+        current_app.logger.error(e)
+        return jsonify(constants.HTTP_PARSE_ERR), 400
     except Exception as err:
         current_app.logger.error(err)
         return jsonify(error=constants.INTERNAL_ERR), 500

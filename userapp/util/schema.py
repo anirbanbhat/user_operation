@@ -1,3 +1,8 @@
+"""
+    Written by ©Anirban Bhattacherji
+    2021
+"""
+
 register_schema = {
     "type": "object",
     "properties": {

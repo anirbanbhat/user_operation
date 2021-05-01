@@ -1,3 +1,8 @@
+"""
+    Written by ©Anirban Bhattacherji
+    2021
+"""
+
 import logging.config
 import os
 from flask import Flask
@@ -29,7 +34,6 @@ def initialize_app(flask_app):
     """Initializing flask app"""
     flask_app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
     flask_app.register_blueprint(user_endpoints.REQUEST_API)
-    flask_app.config['SERVER_NAME'] = os.environ.get('SERVER_NAME', settings.FLASK_SERVER_NAME)
     Database.initialize(os.environ.get('MONGODB_HOST', settings.MONGODB_HOST),
                         os.environ.get('MONGODB_PORT', settings.MONGODB_PORT),
                         os.environ.get('MONGODB_DATABASE', settings.MONGODB_DATABASE))
@@ -37,4 +41,5 @@ def initialize_app(flask_app):
 
 if __name__ == "__main__":
     initialize_app(app)
-    app.run(debug=os.environ.get('FLASK_DEBUG', settings.FLASK_DEBUG))
+    app.run(host=os.environ.get('HOST', '0.0.0.0'), port=os.environ.get('PORT', 5000),
+            debug=os.environ.get('FLASK_DEBUG', settings.FLASK_DEBUG))

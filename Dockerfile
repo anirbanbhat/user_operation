@@ -5,11 +5,8 @@ WORKDIR /app
 COPY . /app/
 RUN pip install -r requirements.txt
 RUN python setup.py install
-ENV HOST "0.0.0.0'
+ENV HOST "0.0.0.0"
 ENV PORT 5000
-ENV SERVER_NAME "0.0.0.0:5000"
-ENV MONGODB_HOST = "localhost"
+ENV MONGODB_HOST = "mongo"
 EXPOSE 5000
-# ENTRYPOINT ["python"]
-# CMD [ "userapp/app.py" ]
 CMD [ "python", "userapp/app.py" ]
