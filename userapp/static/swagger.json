@@ -17,6 +17,19 @@
     }
   ],
   "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Health check"
+        ],
+        "summary": "Verifies health of the application",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/app/useroperations/v1/users": {
       "get": {
         "tags": [

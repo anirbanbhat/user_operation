@@ -7,6 +7,7 @@ PASSWORD_VALIDATION_ERR = 'Password should 8 to 25 character and it should conta
 INTERNAL_ERR = 'Internal error occurred;'
 INVALID_FORM_ERR = 'Invalid json form. Please check input data; '
 INCORRECT_PASSWORD_ERR = 'Provided password in incorrect; '
+HTTP_PARSE_ERR = 'Improper json format;'
 
 SUCCESS_CREATED = 'User profile created successfully!'
 SUCCESS_UPDATE = 'User profile updated successfully!'
@@ -19,6 +20,9 @@ DATA_FIELD_PASSWORD = 'password'
 DATA_LAST_LOGIN = 'lastLogIn'
 DATE_FORMAT = "%d-%b-%Y (%H:%M:%S.%f)"
 
+EMAIL_VALIDATION_REGEX = "^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$"
+NAME_VALIDATION_REGEX = "^[A-Za-z]{2,25}( [A-Za-z]{2,25})?"
+
 MINIMUM_NAME_LENGTH = 4
 MAXIMUM_NAME_LENGTH = 30
 MINIMUM_PASSWORD_LENGTH = 8
@@ -29,4 +33,7 @@ POST = 'POST'
 PUT = 'PUT'
 DELETE = 'DELETE'
 
+OK = "OK"
+
 DATABASE_COLLECTION = 'users'
+DATABASE_NOT_AVAILABLE = "Database service is not available!"

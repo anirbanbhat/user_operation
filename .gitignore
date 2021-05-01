@@ -5,3 +5,5 @@ user_operation.egg-info/
 venv/
 dist/
 build/
+*.deb
+minikube-linux-amd64
