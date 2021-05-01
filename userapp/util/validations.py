@@ -26,7 +26,6 @@ class Validator(object):
         if minimum <= len(str(val)) <= maximum:
             return True
         current_app.logger.error("Length validation fails")
-        print("Length validation fails")
         return False
 
     @staticmethod

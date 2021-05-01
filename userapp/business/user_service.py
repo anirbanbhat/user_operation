@@ -120,7 +120,6 @@ def get_all():
     filter_query = json.loads(db_query.DATABASE_GET_ALL_FILTER_QUERY)
     projection_query = json.loads(db_query.DATABASE_GET_ALL_PROJECTION_QUERY)
     cursor = Database.get_all(constants.DATABASE_COLLECTION, filter_query, projection_query)
-    print("cursor: {}".format(str(cursor)))
     list_cur = list(cursor)
     list_cur
 
