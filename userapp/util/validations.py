@@ -11,7 +11,8 @@ from jsonschema import validate
 from flask import current_app
 
 from userapp.util import constants
-from userapp.util.constants import MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH, MINIMUM_PASSWORD_LENGTH
+from userapp.util.constants import MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH, \
+    MINIMUM_PASSWORD_LENGTH, MAXIMUM_PASSWORD_LENGTH
 from userapp.util.exception import CustomErr
 
 LOGGER = logging.getLogger(__name__)
@@ -32,7 +33,7 @@ class Validator(object):
     def name_validation(val):
         current_app.logger.debug("Validating name: {}".format(str(val)))
         if not Validator.string_length_validation(val, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH) \
-                and not re.search(constants.NAME_VALIDATION_REGEX, str(val)):
+                or not re.search(constants.NAME_VALIDATION_REGEX, str(val)):
             current_app.logger.error("Name validation fails for name: {}".format(str(val)))
             raise CustomErr(constants.NAME_VALIDATION_ERR, 400)
 
@@ -47,7 +48,7 @@ class Validator(object):
     def password_validation(password):
         current_app.logger.debug("Validating password:")
         d, l, u, s = 0, 0, 0, 0
-        if Validator.string_length_validation(password, MINIMUM_PASSWORD_LENGTH, MAXIMUM_NAME_LENGTH):
+        if Validator.string_length_validation(password, MINIMUM_PASSWORD_LENGTH, MAXIMUM_PASSWORD_LENGTH):
             for char in password:
                 if char.isdigit():
                     d += 1

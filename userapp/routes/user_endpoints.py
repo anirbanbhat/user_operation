@@ -2,7 +2,7 @@
     Written by ©Anirban Bhattacherji
     2021
 """
-
+import json
 from json import JSONDecodeError
 
 from flask import request, jsonify, Blueprint, current_app
@@ -31,8 +31,12 @@ def create_user():
         return jsonify(error=e.message), e.code
     except (ValueError, JSONDecodeError) as e:
         current_app.logger.error(e)
-        return jsonify(constants.HTTP_PARSE_ERR), 400
+        return jsonify(error=constants.HTTP_PARSE_ERR), 400
     except Exception as err:
+        # To handle scenarios where json syntax in invalid
+        if err.code == 400:
+            current_app.logger.error(err)
+            return jsonify(error=constants.HTTP_PARSE_ERR), 400
         current_app.logger.error(err)
         return jsonify(error=constants.INTERNAL_ERR), 500
 
@@ -48,6 +52,10 @@ def list_users():
         current_app.logger.error(e)
         return jsonify(error=e.message), e.code
     except Exception as err:
+        # To handle scenarios where json syntax in invalid
+        if err.code == 400:
+            current_app.logger.error(err)
+            return jsonify(error=constants.HTTP_PARSE_ERR), 400
         current_app.logger.error(err)
         return jsonify(error=constants.INTERNAL_ERR), 500
 
@@ -68,8 +76,12 @@ def login_user():
         return jsonify(error=e.message), e.code
     except (ValueError, JSONDecodeError) as e:
         current_app.logger.error(e)
-        return jsonify(constants.HTTP_PARSE_ERR), 400
+        return jsonify(error=constants.HTTP_PARSE_ERR), 400
     except Exception as err:
+        # To handle scenarios where json syntax in invalid
+        if err.code == 400:
+            current_app.logger.error(err)
+            return jsonify(error=constants.HTTP_PARSE_ERR), 400
         current_app.logger.error(err)
         return jsonify(error=constants.INTERNAL_ERR), 500
 
@@ -84,13 +96,13 @@ def update_user(email):
         data = request.get_json(force=True)
         update_query = user_service.validate_updation(data, email)
         user_service.update_data(email, update_query)
-        return jsonify(message=constants.SUCCESS_UPDATE), 204
+        return jsonify(message=constants.SUCCESS_UPDATE), 200
     except CustomErr as e:
         current_app.logger.error(e)
         return jsonify(error=e.message), e.code
     except (ValueError, JSONDecodeError) as e:
         current_app.logger.error(e)
-        return jsonify(constants.HTTP_PARSE_ERR), 400
+        return jsonify(error=constants.HTTP_PARSE_ERR), 400
     except Exception as err:
         current_app.logger.error(err)
         return jsonify(error=constants.INTERNAL_ERR), 500
@@ -102,7 +114,7 @@ def delete_user(email):
     current_app.logger.debug("DELETE: Delete user detail")
     try:
         user_service.delete_user(email)
-        return jsonify(message=constants.SUCCESS_DELETE), 204
+        return jsonify(message=constants.SUCCESS_DELETE), 200
     except CustomErr as e:
         current_app.logger.error(e)
         return jsonify(error=e.message), e.code

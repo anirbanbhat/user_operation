@@ -21,14 +21,8 @@ def validate_registration(data):
     Validator.validate_json(data, schema.register_schema)
     email = data[constants.DATA_FIELD_EMAIL]
     Validator.email_validation(email)
-    try:
-        exists, err = email_exist(email)
-        if err:
-            return False, err, 500, None
-        if exists:
-            return False, constants.EMAIL_EXISTS, 400, None
-    except Exception as e:
-        return False, constants.INTERNAL_ERR, 500, None
+    if email_exist(email):
+        raise CustomErr(constants.EMAIL_EXISTS, 400)
     name = data[constants.DATA_FIELD_NAME]
     Validator.name_validation(name)
     password = data[constants.DATA_FIELD_PASSWORD]
@@ -51,12 +45,13 @@ def validate_updation(data, email):
     if not email_exist(email):
         raise CustomErr(constants.EMAIL_DOES_NOT_EXIST, 400)
     Validator.validate_json(data, schema.update_schema)
+    # data = json.loads(data)
     new_values = {}
-    if data[constants.DATA_FIELD_NAME]:
+    if constants.DATA_FIELD_NAME in data:
         name = data[constants.DATA_FIELD_NAME]
         Validator.name_validation(name)
         new_values[constants.DATA_FIELD_NAME] = name
-    if data[constants.DATA_FIELD_PASSWORD]:
+    if constants.DATA_FIELD_PASSWORD in data:
         password = data[constants.DATA_FIELD_PASSWORD]
         Validator.password_validation(password)
         hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
@@ -109,7 +104,7 @@ def delete_user(email):
     current_app.logger.debug("Deleting for the registered user profile")
     Validator.email_validation(email)
     if not email_exist(email):
-        raise CustomErr(constants.EMAIL_DOES_NOT_EXIST)
+        raise CustomErr(constants.EMAIL_DOES_NOT_EXIST, 400)
     filter_query = Template(db_query.DATABASE_FILTER_QUERY)
     filter_query = json.loads(filter_query.substitute(field=constants.DATA_FIELD_EMAIL, value=email))
     Database.delete(constants.DATABASE_COLLECTION, filter_query)
@@ -121,7 +116,7 @@ def get_all():
     projection_query = json.loads(db_query.DATABASE_GET_ALL_PROJECTION_QUERY)
     cursor = Database.get_all(constants.DATABASE_COLLECTION, filter_query, projection_query)
     list_cur = list(cursor)
-    list_cur
+    return list_cur
 
 
 def email_exist(email):

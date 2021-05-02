@@ -85,7 +85,7 @@ class Database(object):
         current_app.logger.debug("Deleting from the collection: {}".format(collection))
         try:
             Database.client.server_info()
-            Database.DATABASE[collection].delete(filter_query)
+            Database.DATABASE[collection].delete_one(filter_query)
             return True
         except errors.ServerSelectionTimeoutError as err:
             current_app.logger.error("Exception occurred while deleting from the collection: {}: {}"

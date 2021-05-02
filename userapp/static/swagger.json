@@ -69,7 +69,7 @@
             "description": "User profile created successfully!"
           },
           "400": {
-            "description": "1. Invalid json form. Please check input data; 2. Name should be 4 to 20 Characters and alpha-numeric value; 3. Please share proper email address; 4. Password should 8 to 25 character and it should contain at least one upper case one lower case one digit and and one special characters (@$#_); "
+            "description": "1. Invalid json form. Please check input data; 2. Name should be 4 to 20 Characters with alphabets and following special characters ,.-; 3. Please share proper email address; 4. Password should 8 to 25 characters and it should contain at least one upper case letter, one lower case letter, one digit and one special characters (@$#_); "
           },
           "500": {
             "description": "Internal error occurred;"
@@ -142,14 +142,14 @@
           "application/json"
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": "User profile updated successfully!"
           },
           "404":{
             "description": "No account exists with this email id"
           },
           "400": {
-            "description": "1. Name should be 4 to 20 Characters and alpha-numeric value; 2. Invalid json form. Please check input data; 3. Password should 8 to 25 character and it should contain at least one upper case one lower case one digit and and one special characters (@$#_);  "
+            "description": "1. Name should be 4 to 20 Characters with alphabets and following special characters ,.-; 2. Invalid json form. Please check input data; 3. Password should 8 to 25 characters and it should contain at least one upper case letter, one lower case letter, one digit and one special characters (@$#_); "
           },
           "500": {
             "description": "Internal error occurred;"
