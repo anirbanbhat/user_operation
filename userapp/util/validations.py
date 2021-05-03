@@ -32,8 +32,8 @@ class Validator(object):
     @staticmethod
     def name_validation(val):
         current_app.logger.debug("Validating name: {}".format(str(val)))
-        if not Validator.string_length_validation(val, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH) \
-                or not re.search(constants.NAME_VALIDATION_REGEX, str(val)):
+        if not (Validator.string_length_validation(val, MINIMUM_NAME_LENGTH, MAXIMUM_NAME_LENGTH)
+                and str(val).strip().isalpha()):
             current_app.logger.error("Name validation fails for name: {}".format(str(val)))
             raise CustomErr(constants.NAME_VALIDATION_ERR, 400)
 

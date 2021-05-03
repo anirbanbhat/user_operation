@@ -7,6 +7,6 @@ RUN pip install -r requirements.txt
 RUN python setup.py install
 ENV HOST "0.0.0.0"
 ENV PORT 5000
-ENV MONGODB_HOST = "mongo"
+ENV MONGODB_HOST "mongo"
 EXPOSE 5000
 CMD [ "python", "userapp/app.py" ]

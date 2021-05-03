@@ -3,8 +3,7 @@
     2021
 """
 
-NAME_VALIDATION_ERR = 'Name should be 4 to 20 Characters with alphabets and following special ' \
-                      'characters ,.-; '
+NAME_VALIDATION_ERR = 'Name should be 4 to 30 Characters of alphabets and whitespaces'
 EMAIL_VALIDATION_ERR = 'Please share proper email address; '
 EMAIL_EXISTS = 'An account already exists with this email id'
 EMAIL_DOES_NOT_EXIST = 'No account exists with this email id'
@@ -27,7 +26,6 @@ DATA_LAST_LOGIN = 'lastLogIn'
 DATE_FORMAT = "%d-%b-%Y (%H:%M:%S.%f)"
 
 EMAIL_VALIDATION_REGEX = "^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$"
-NAME_VALIDATION_REGEX = "/^[a-z ,.'-]+$/i"
 
 MINIMUM_NAME_LENGTH = 4
 MAXIMUM_NAME_LENGTH = 30
