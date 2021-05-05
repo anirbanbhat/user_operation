@@ -32,7 +32,7 @@ Installation Steps:
    - Start MongoDB
      - ```docker run -p 127.0.0.1:27017:27017 --name my-mongo -d mongo```
    - Get into the Mongo Container
-     - ```docker exec -it user-db bash```
+     - ```docker exec -it my-mongo bash```
    - Get into the Mongo Shell
      - ```mongo```
    - Create database
