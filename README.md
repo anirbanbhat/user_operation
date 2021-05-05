@@ -44,7 +44,7 @@ Installation Steps:
    - Start virtual environment for python (Say the folder in venv)
      - source venv/bin/activate
    - Install the application
-     - python3 setup.py
+     - python3 setup.py install
    - Run the application
      - python3 userapp/app.py
 
