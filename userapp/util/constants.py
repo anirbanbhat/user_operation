@@ -41,3 +41,8 @@ OK = "OK"
 
 DATABASE_COLLECTION = 'users'
 DATABASE_NOT_AVAILABLE = "Database service is not available!"
+
+OFFSET = 0
+PAGE_SIZE = 10
+SORT_BY_NAME = 'name'
+SORT_BY_EMAIL = 'email'

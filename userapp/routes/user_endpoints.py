@@ -41,12 +41,18 @@ def create_user():
         return jsonify(error=constants.INTERNAL_ERR), 500
 
 
-@REQUEST_API.route("/app/useroperations/v1/users", methods=[constants.GET])
+@REQUEST_API.route("/app/useroperations/v1/users",
+                   # defaults={'offset': constants.OFFSET, 'page_limit': constants.PAGE_SIZE,
+                   #           'sort_by': constants.SORT_BY_NAME},
+                   methods=[constants.GET])
 def list_users():
     """Returns all users"""
     current_app.logger.debug("GET: List all new user")
     try:
-        response = user_service.get_all()
+        records, total_count, current_count = user_service.get_all(request.args.get('offset', constants.OFFSET),
+                                                                   request.args.get('page_limit', constants.PAGE_SIZE),
+                                                                   request.args.get('sort_by', constants.SORT_BY_NAME))
+        response = {'total_count': total_count, 'current_count': current_count, 'records': records}
         return jsonify(response), 200
     except CustomErr as e:
         current_app.logger.error(e)

@@ -3,7 +3,7 @@
     2021
 """
 
-from pymongo import MongoClient, errors
+from pymongo import MongoClient, errors, ASCENDING
 from flask import current_app
 from userapp.util.exception import CustomErr
 
@@ -58,13 +58,28 @@ class Database(object):
             raise CustomErr(constants.DATABASE_NOT_AVAILABLE, 500)
 
     @staticmethod
-    def get_all(collection, filter_query, projection_query):
+    def get_all(collection, filter_query, projection_query, skips, page_size, sort_by):
         current_app.logger.debug("Listing all and projecting from the collection: {}".format(collection))
         try:
             Database.client.server_info()
-            return Database.DATABASE[collection].find(filter_query, projection_query)
+            return Database.DATABASE[collection]\
+                .find(filter_query, projection_query)\
+                .sort("abc", ASCENDING)\
+                .skip(skips)\
+                .limit(page_size)
         except errors.ServerSelectionTimeoutError as err:
             current_app.logger.error("Exception occurred while listing from the collection: {}: {}"
+                                     .format(collection, str(err)))
+            raise CustomErr(constants.DATABASE_NOT_AVAILABLE, 500)
+
+    @staticmethod
+    def get_count(collection):
+        current_app.logger.debug("Returns count of total collection: {}".format(collection))
+        try:
+            Database.client.server_info()
+            return Database.DATABASE[collection].find().count()
+        except errors.ServerSelectionTimeoutError as err:
+            current_app.logger.error("Exception occurred while counting the collection: {}: {}"
                                      .format(collection, str(err)))
             raise CustomErr(constants.DATABASE_NOT_AVAILABLE, 500)
 

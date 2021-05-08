@@ -19,7 +19,7 @@ from userapp.db_access import db_query
 def validate_registration(data):
     current_app.logger.debug("Validating registration data")
     Validator.validate_json(data, schema.register_schema)
-    email = data[constants.DATA_FIELD_EMAIL]
+    email = data[constants.DATA_FIELD_EMAIL].lower()
     Validator.email_validation(email)
     if email_exist(email):
         raise CustomErr(constants.EMAIL_EXISTS, 400)
@@ -29,7 +29,7 @@ def validate_registration(data):
     Validator.password_validation(password)
     date = datetime.now().strftime(constants.DATE_FORMAT)
     current_app.logger.debug("Hashing the password before storing")
-    hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw((password+email).encode('utf8'), bcrypt.gensalt())
     user_data = {
         constants.DATA_FIELD_NAME: name,
         constants.DATA_FIELD_EMAIL: email,
@@ -41,8 +41,8 @@ def validate_registration(data):
 
 def validate_updation(data, email):
     current_app.logger.debug("Validating update data for email: {}".format(email))
-    Validator.email_validation(email)
-    if not email_exist(email):
+    Validator.email_validation(email.lower())
+    if not email_exist(email.lower()):
         raise CustomErr(constants.EMAIL_DOES_NOT_EXIST, 400)
     Validator.validate_json(data, schema.update_schema)
     # data = json.loads(data)
@@ -54,7 +54,7 @@ def validate_updation(data, email):
     if constants.DATA_FIELD_PASSWORD in data:
         password = data[constants.DATA_FIELD_PASSWORD]
         Validator.password_validation(password)
-        hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
+        hashed_password = bcrypt.hashpw((password+email).encode('utf8'), bcrypt.gensalt())
         new_values[constants.DATA_FIELD_PASSWORD] = hashed_password
     date = datetime.now().strftime(constants.DATE_FORMAT)
     new_values[constants.DATA_LAST_LOGIN] = date
@@ -64,7 +64,7 @@ def validate_updation(data, email):
 def validate_login(data):
     current_app.logger.debug("Validating login data: {}".format(str(data)))
     Validator.validate_json(data, schema.login_schema)
-    email = data[constants.DATA_FIELD_EMAIL]
+    email = data[constants.DATA_FIELD_EMAIL].lower()
     Validator.email_validation(email)
     if not email_exist(email):
         raise CustomErr(constants.EMAIL_DOES_NOT_EXIST, 400)
@@ -78,7 +78,7 @@ def insert_data(data):
 def update_data(email, update_query):
     current_app.logger.debug("Updating registration data for email: {}".format(email))
     filter_query = Template(db_query.DATABASE_FILTER_QUERY)
-    filter_query = json.loads(filter_query.substitute(field=constants.DATA_FIELD_EMAIL, value=email))
+    filter_query = json.loads(filter_query.substitute(field=constants.DATA_FIELD_EMAIL, value=email.lower()))
     if not type(update_query) is dict:
         update_query = json.loads(update_query)
     current_app.logger.debug("update_query: {}".format(str(update_query)))
@@ -93,7 +93,7 @@ def update_login(data):
     date = datetime.now().strftime(constants.DATE_FORMAT)
     update_query = '{ "$set": { "lastLogIn": "' + date + '" }}'
     update_query = json.loads(update_query)
-    if verify_password(filter_query, data[constants.DATA_FIELD_PASSWORD]):
+    if verify_password(filter_query, data[constants.DATA_FIELD_PASSWORD], data[constants.DATA_FIELD_EMAIL]):
         Database.update(constants.DATABASE_COLLECTION, filter_query, update_query)
         return Template(constants.SUCCESS_LOGIN).substitute(time=date)
     else:
@@ -110,13 +110,15 @@ def delete_user(email):
     Database.delete(constants.DATABASE_COLLECTION, filter_query)
 
 
-def get_all():
+def get_all(offset, page_size, sort_by):
     current_app.logger.debug("Retrieving all users")
     filter_query = json.loads(db_query.DATABASE_GET_ALL_FILTER_QUERY)
     projection_query = json.loads(db_query.DATABASE_GET_ALL_PROJECTION_QUERY)
-    cursor = Database.get_all(constants.DATABASE_COLLECTION, filter_query, projection_query)
+    skips = offset * page_size
+    total_count = Database.get_count(constants.DATABASE_COLLECTION)
+    cursor = Database.get_all(constants.DATABASE_COLLECTION, filter_query, projection_query, skips, page_size,sort_by)
     list_cur = list(cursor)
-    return list_cur
+    return list_cur, total_count, len(list_cur)
 
 
 def email_exist(email):
@@ -134,9 +136,9 @@ def email_exist(email):
     return exists
 
 
-def verify_password(filter_query, password):
+def verify_password(filter_query, password, email):
     hash_password = Database.get(constants.DATABASE_COLLECTION, filter_query)[0][constants.DATA_FIELD_PASSWORD]
-    return bcrypt.hashpw(password.encode('utf8'), hash_password) == hash_password
+    return bcrypt.hashpw((password+email).encode('utf8'), hash_password) == hash_password
 
 
 def health_check():
