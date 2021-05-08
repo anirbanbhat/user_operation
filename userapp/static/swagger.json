@@ -263,12 +263,25 @@
         }
       },
       "users": {
-        "type": "array",
+        "type": "object",
         "properties": {
-          "user": {
-            "type": "object",
+          "current_count": {
+            "type": "number",
+            "format": "number"
+          },
+          "total_count": {
+            "type": "number",
+            "format": "number"
+          },
+          "users": {
+            "type": "array",
             "properties": {
-              "$ref": "#/components/schemas/user"
+              "user": {
+                "type": "object",
+                "properties": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
             }
           }
         }
